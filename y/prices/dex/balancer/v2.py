@@ -55,12 +55,7 @@ class BalancerV2Vault(ContractBase):
     @a_sync.a_sync(ram_cache_maxsize=10)
     async def list_pools(self, block: Optional[Block] = None) -> Dict[HexBytes,EthAddress]:
         topics = ['0x3c13bc30b8e878c53fd2a36b679409c073afd75950be43d8858768e956fbc20e']
-        #try:
         events = decode_logs(await get_logs_asap(self.address, topics, to_block=block, sync=False))
-        #except TypeError as e:
-        #    if "Start must be less than or equal to stop" in str(e):
-        #        return {}
-        #    raise
         return {
             event['poolId'].hex(): event['poolAddress'] for event in events
             # NOTE: For some reason the Balancer fork on Fantom lists "0x3e522051A9B1958Aa1e828AC24Afba4a551DF37d"
